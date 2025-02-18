@@ -258,6 +258,8 @@ protected:
   // Find item in folder
   QModelIndex findItemInFolder( QString const & itemName, TreeItem::Type itemType, QModelIndex const & parentIdx );
 
+  bool findWordByNameRec( TreeItem * parent, const QString & name);
+
   TreeItem * getItem( const QModelIndex & index ) const;
 
   // Find folder with given name or create it if folder not exist
