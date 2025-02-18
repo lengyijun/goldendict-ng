@@ -911,6 +911,20 @@ TreeItem * FavoritesModel::findFolderByName( TreeItem * parent, const QString & 
   return nullptr;
 }
 
+bool FavoritesModel::findWordByNameRec( TreeItem * parent, const QString & name)
+{
+  for ( int i = 0; i < parent->childCount(); i++ ) {
+    TreeItem * child = parent->child( i );
+    if ( child->type() == TreeItem::Word && child->data().toString() == name ) {
+      return true;
+    }
+    if ( child->type() == TreeItem::Folder && findWordByNameRec(child, name)) {
+      return true;
+    }
+  }
+  return false;
+}
+
 TreeItem * FavoritesModel::getItem( const QModelIndex & index ) const
 {
   if ( index.isValid() ) {
@@ -1064,6 +1078,11 @@ bool FavoritesModel::removeHeadword( const QString & path, const QString & headw
 bool FavoritesModel::isHeadwordPresent( const QString & path, const QString & headword )
 {
   QModelIndex idx;
+
+  if (path.isEmpty()) {
+    // `all`
+    return findWordByNameRec(getItem(idx), headword);
+  }
 
   // Find target folder
 
