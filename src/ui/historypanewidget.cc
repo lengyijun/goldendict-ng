@@ -5,6 +5,7 @@
 #include <QDockWidget>
 #include <QKeyEvent>
 #include <QClipboard>
+#include <QProcess>
 #include <algorithm>
 #include <functional>
 
@@ -119,6 +120,20 @@ void HistoryPaneWidget::deleteSelectedItems()
     // nothing to do
     return;
   }
+
+  QStringList selectedStrings;
+  selectedStrings << "delete_word";
+  for ( const auto & id : std::as_const( selectedIdxs ) ) {
+    selectedStrings << m_historyList->model()->data( id ).toString();
+  }
+  QString command = selectedStrings.join( QString::fromLatin1( " " ) );
+  qDebug() << command;
+  QByteArray byteArray = command.toLatin1();
+  char* charPtr = byteArray.data();
+  system(charPtr);
+  // QProcess process;
+  // process.start(command);
+  // process.waitForFinished();
 
   QList< int > idxsToDelete;
 
