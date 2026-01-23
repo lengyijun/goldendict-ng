@@ -1143,12 +1143,33 @@ bool FavoritesModel::removeWordFullPath( const QString & headword )
   return false;
 }
 
+bool FavoritesModel::isWordPresentRec( const QString & headword, TreeItem * targetFolder )
+{
+  for ( int i = 0; i < targetFolder->childCount(); i++ ) {
+    TreeItem * item = targetFolder->child( i );
+    if ( item->type() == TreeItem::Word ) {
+      if ( item->data().toString() == headword ) {
+        return true;
+      }
+    }
+    else if ( item->type() == TreeItem::Folder ) {
+      if ( isWordPresentRec( headword, item ) ) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 bool FavoritesModel::isWordPresentFullPath( const QString & headword )
 {
   TreeItem * targetFolder =
     activeFolderFullPath.empty() ? getItem( QModelIndex() ) : getItemByFullPath( activeFolderFullPath );
 
   if ( targetFolder != nullptr ) {
+    return isWordPresentRec( headword, targetFolder );
+    /*
     for ( int i = 0; i < targetFolder->childCount(); i++ ) {
       TreeItem * item = targetFolder->child( i );
       if ( item->type() == TreeItem::Word ) {
@@ -1157,6 +1178,7 @@ bool FavoritesModel::isWordPresentFullPath( const QString & headword )
         }
       }
     }
+    */
   }
 
   return false;

@@ -233,6 +233,8 @@ public:
   // Remove headword from given folder
   // return false if failed
   bool removeWordFullPath( const QString & headword );
+  
+  bool isWordPresentRec( const QString & headword, TreeItem * targetFolder );
 
   // Return true if headwors is already presented in Favorites
   bool isWordPresentFullPath( const QString & headword );
